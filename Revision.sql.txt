@@ -1,0 +1,52 @@
+CREATE TABLE IF NOT EXISTS station (
+  NumStation int NOT NULL,
+  latitude int DEFAULT NULL,
+  longitude int DEFAULT NULL,
+  adresse varchar(50) DEFAULT NULL,
+  PRIMARY KEY (NumStation));
+  
+CREATE TABLE IF NOT EXISTS borne (
+  NumBorne int NOT NULL,
+  DateCircu date NOT NULL,
+  DateRevision date NOT NULL,
+  TypeRecharge BOOLEAN NOT NULL,
+  NumStation int NOT NULL,
+  PRIMARY KEY (NumBorne),
+  FOREIGN KEY (NumStation) REFERENCES station(NumStation));
+
+
+CREATE TABLE IF NOT EXISTS client (
+  NumClient int NOT NULL,
+  NomClient varchar(20) NOT NULL,
+  VilleClient varchar(20) NOT NULL,
+  PRIMARY KEY (NumClient)
+);
+
+CREATE TABLE IF NOT EXISTS modele (
+  RefBaterie int NOT NULL,
+  Fabricant varchar(20) NOT NULL,
+  capacite int NOT NULL,
+  PRIMARY KEY (RefBaterie));
+  
+CREATE TABLE IF NOT EXISTS contrat (
+  NumContrat int NOT NULL,
+  Imatriculation varchar(10) NOT NULL,
+  SoldeKW int NOT NULL,
+  DateContrat date NOT NULL,
+  NumClient int NOT NULL,
+  RefBaterie int NOT NULL,
+  PRIMARY KEY (NumContrat),
+  FOREIGN KEY (RefBaterie) REFERENCES modele(RefBaterie),
+  FOREIGN KEY (NumClient) REFERENCES client(NumClient));
+
+
+
+CREATE TABLE IF NOT EXISTS recharger (
+NumContrat int NOT NULL,  
+NumBorne int NOT NULL,  
+HeureDebut int NOT NULL,
+HeureFin int NOT NULL,  
+Nbkw int NOT NULL,  
+PRIMARY KEY (NumContrat,NumBorne,HeureDebut), 
+FOREIGN KEY (NumBorne) REFERENCES borne(NumBorne),
+FOREIGN KEY (NumContrat) REFERENCES contrat(NumContrat));
